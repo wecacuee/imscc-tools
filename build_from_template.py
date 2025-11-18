@@ -407,7 +407,7 @@ def build_imscc(template_dir, output_file=None):
     # First pass: Build filename → title slug mapping
     filename_to_slug_map = {}
     for html_file in html_files:
-        html_content = html_file.read_text()
+        html_content = html_file.read_text(encoding='utf-8')
         meta = parse_canvas_meta(html_content)
         
         filename_base = html_file.stem
@@ -422,7 +422,7 @@ def build_imscc(template_dir, output_file=None):
     
     for html_file in html_files:
         # Read HTML content
-        html_content = html_file.read_text()
+        html_content = html_file.read_text(encoding='utf-8')
         
         # Parse metadata
         meta = parse_canvas_meta(html_content)

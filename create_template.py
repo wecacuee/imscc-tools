@@ -609,7 +609,7 @@ def create_template(output_dir):
     
     for filename, content in pages.items():
         filepath = wiki_dir / filename
-        filepath.write_text(content)
+        filepath.write_text(content, encoding='utf-8')
         print(f"   ✓ wiki_content/{filename}")
     
     # Create example files
@@ -622,36 +622,36 @@ def create_template(output_dir):
     
     for filename, content in files.items():
         filepath = files_dir / filename
-        filepath.write_text(content)
+        filepath.write_text(content, encoding='utf-8')
         print(f"   ✓ web_resources/{filename}")
     
     # Create example quiz
     print("\n📝 Creating example quiz...")
     quiz_path = quizzes_dir / "comprehensive-quiz_TEMPLATE.json"
-    quiz_path.write_text(json.dumps(EXAMPLE_QUIZ_JSON, indent=2))
+    quiz_path.write_text(json.dumps(EXAMPLE_QUIZ_JSON, indent=2), encoding='utf-8')
     print(f"   ✓ quizzes/comprehensive-quiz_TEMPLATE.json")
     
     # Create example assignment
     print("\n📋 Creating example assignment...")
     assignment_path = assignments_dir / "comprehensive-assignment_TEMPLATE.json"
-    assignment_path.write_text(json.dumps(EXAMPLE_ASSIGNMENT_JSON, indent=2))
+    assignment_path.write_text(json.dumps(EXAMPLE_ASSIGNMENT_JSON, indent=2), encoding='utf-8')
     print(f"   ✓ assignments/comprehensive-assignment_TEMPLATE.json")
     
     # Create example rubric
     print("\n📊 Creating example rubric...")
     rubric_path = rubrics_dir / "comprehensive-rubric_TEMPLATE.json"
-    rubric_path.write_text(json.dumps(EXAMPLE_RUBRIC_JSON, indent=2))
+    rubric_path.write_text(json.dumps(EXAMPLE_RUBRIC_JSON, indent=2), encoding='utf-8')
     print(f"   ✓ rubrics/comprehensive-rubric_TEMPLATE.json")
     
     # Create course.json
     print("\n⚙️  Creating configuration files...")
     course_json_path = output_path / "course.json"
-    course_json_path.write_text(json.dumps(DEFAULT_COURSE_JSON, indent=2))
+    course_json_path.write_text(json.dumps(DEFAULT_COURSE_JSON, indent=2), encoding='utf-8')
     print(f"   ✓ course.json")
     
     # Create modules.json
     modules_json_path = output_path / "modules.json"
-    modules_json_path.write_text(json.dumps(DEFAULT_MODULES_JSON, indent=2))
+    modules_json_path.write_text(json.dumps(DEFAULT_MODULES_JSON, indent=2), encoding='utf-8')
     print(f"   ✓ modules.json")
     
     # Create README
@@ -876,7 +876,7 @@ This will create `{DEFAULT_COURSE_JSON['course_code']}.imscc` that you can impor
 """
     
     readme_path = output_path / "README.md"
-    readme_path.write_text(readme_content)
+    readme_path.write_text(readme_content, encoding='utf-8')
     print(f"   ✓ README.md")
     
     # Success message
