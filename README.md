@@ -21,7 +21,7 @@ pip install -e .  # Optional
 
 ---
 
-## Two Workflows
+## Three Workflows
 
 ### 1. Programmatic (Python)
 
@@ -47,6 +47,22 @@ cd biology-101
 python build_from_template.py .
 
 # Upload biology-101.imscc to Canvas
+```
+
+### 3. Extract from IMSCC (Reverse Engineering)
+
+```bash
+# Extract existing IMSCC to editable template
+python template_from_imscc.py existing-course.imscc
+
+# Creates existing-course/ folder with:
+# - wiki_content/*.html (local preview links)
+# - web_resources/ (organized files)
+# - course.json (metadata)
+# - modules.json (module structure)
+
+# Edit locally, then rebuild
+python build_from_template.py existing-course
 ```
 
 ---

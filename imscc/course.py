@@ -358,8 +358,10 @@ class Course:
             resource = SubElement(resources, 'resource')
             resource.set('identifier', file_res.identifier)
             resource.set('type', 'webcontent')
-            resource.set('href', file_res.destination_path)
-            SubElement(resource, 'file').set('href', file_res.destination_path)
+            # Normalize path to use forward slashes for cross-platform compatibility
+            normalized_path = file_res.destination_path.replace('\\', '/')
+            resource.set('href', normalized_path)
+            SubElement(resource, 'file').set('href', normalized_path)
         
         # Serialize to string without pretty printing first
         rough_string = tostring(manifest, encoding='utf-8')
@@ -548,11 +550,33 @@ class Course:
             with open(settings_path, 'w', encoding='utf-8') as f:
                 f.write(self._generate_course_settings())
             
-            # Write minimal required files
+            # Write files_meta.xml with folder structure
             files_meta_path = os.path.join(temp_dir, 'course_settings', 'files_meta.xml')
             with open(files_meta_path, 'w', encoding='utf-8') as f:
                 f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-                f.write('<fileMeta xmlns="http://canvas.instructure.com/xsd/cccv1p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://canvas.instructure.com/xsd/cccv1p0 https://canvas.instructure.com/xsd/cccv1p0.xsd"/>\n')
+                f.write('<fileMeta xmlns="http://canvas.instructure.com/xsd/cccv1p0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://canvas.instructure.com/xsd/cccv1p0 https://canvas.instructure.com/xsd/cccv1p0.xsd">\n')
+                
+                # Extract unique folder paths from file resources
+                folders = set()
+                for file_res in self.file_manager.files:
+                    # Get directory path from destination_path
+                    dest_path = Path(file_res.destination_path)
+                    if len(dest_path.parts) > 1:  # Has subdirectories
+                        # Add all parent folders (excluding the file itself)
+                        for i in range(1, len(dest_path.parts) - 1):
+                            folder_path = '/'.join(dest_path.parts[1:i+1])
+                            folders.add(folder_path)
+                
+                # Write folder definitions if any exist
+                if folders:
+                    f.write('  <folders>\n')
+                    for folder in sorted(folders):
+                        f.write(f'    <folder path="{folder}">\n')
+                        f.write('      <hidden>false</hidden>\n')
+                        f.write('    </folder>\n')
+                    f.write('  </folders>\n')
+                
+                f.write('</fileMeta>\n')
             
             context_path = os.path.join(temp_dir, 'course_settings', 'context.xml')
             with open(context_path, 'w', encoding='utf-8') as f:
