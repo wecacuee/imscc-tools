@@ -316,7 +316,7 @@ class FillInMultipleBlanksQuestion(QuizQuestion):
         # Response sections for each blank
         for var_name in self.blanks.keys():
             response_str = SubElement(presentation, 'response_str', 
-                                     ident=f'response_{var_name}', rcardinality='Single')
+                                     ident=var_name, rcardinality='Single')
             SubElement(response_str, 'render_fib')
         
         # Response processing
@@ -331,7 +331,7 @@ class FillInMultipleBlanksQuestion(QuizQuestion):
                 respcondition = SubElement(resprocessing, 'respcondition')
                 respcondition.set('continue', 'Yes')
                 conditionvar = SubElement(respcondition, 'conditionvar')
-                varequal = SubElement(conditionvar, 'varequal', respident=f'response_{var_name}')
+                varequal = SubElement(conditionvar, 'varequal', respident=var_name)
                 varequal.text = answer
                 setvar = SubElement(respcondition, 'setvar', action='Set', varname='SCORE')
                 setvar.text = str(100 // len(self.blanks))
