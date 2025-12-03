@@ -295,7 +295,7 @@ def load_quiz_from_json(quiz_path):
     return quiz
 
 
-def load_assignment_from_json(assignment_path):
+def load_assignment_from_json(assignment_path, identifier=None):
     """Load an assignment from a JSON file."""
     with open(assignment_path, 'r', encoding='utf-8') as f:
         assignment_data = json.load(f)
@@ -332,7 +332,8 @@ def load_assignment_from_json(assignment_path):
         grading_type=assignment_data.get('grading_type', 'points'),
         due_at=assignment_data.get('due_at'),
         unlock_at=assignment_data.get('unlock_at'),
-        lock_at=assignment_data.get('lock_at')
+        lock_at=assignment_data.get('lock_at'),
+        identifier=identifier
     )
 
 
@@ -555,7 +556,7 @@ def build_imscc(template_dir, output_file=None):
                 with open(assignment_file, 'r') as f:
                     assignment_data = json.load(f)
                 
-                assignment = load_assignment_from_json(assignment_file)
+                assignment = load_assignment_from_json(assignment_file, identifier=assignment_id)
                 
                 # Attach rubric if specified
                 rubric_ref = assignment_data.get('rubric')

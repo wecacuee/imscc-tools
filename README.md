@@ -269,6 +269,22 @@ Local links work for preview, then convert automatically:
 <a href="$CANVAS_OBJECT_REFERENCE$/pages/lesson-1">Lesson 1</a>
 ```
 
+**Assignment Links:**
+
+To link to assignments from pages, use the Canvas format directly (no local conversion needed):
+
+```html
+<a href="$CANVAS_OBJECT_REFERENCE$/assignments/week-01-homework">Week 1 Homework</a>
+```
+
+**Important:** Use the assignment's JSON filename (without `.json`) as the identifier.
+
+Example:
+- Assignment file: `assignments/week-01-homework.json`
+- Link identifier: `week-01-homework`
+
+The assignment identifier is set automatically from the filename during build.
+
 ---
 
 ## Quiz Question Types

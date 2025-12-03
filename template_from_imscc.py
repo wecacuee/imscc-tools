@@ -166,7 +166,8 @@ def convert_canvas_links_to_local(html_content, page_identifier_to_filename):
     - $IMS-CC-FILEBASE$/any/path/file.txt → ../web_resources/any/path/file.txt
     - $WIKI_REFERENCE$/pages/identifier → page-name.html
     - $CANVAS_OBJECT_REFERENCE$/pages/slug → page-name.html
-    - $CANVAS_OBJECT_REFERENCE$/modules/id → (removed - module links can't be local)
+    - $CANVAS_OBJECT_REFERENCE$/assignments/id → [ASSIGNMENT:id] (placeholder)
+    - $CANVAS_OBJECT_REFERENCE$/modules/id → [MODULE:id] (placeholder)
     
     Args:
         html_content: The HTML content to process
@@ -218,10 +219,18 @@ def convert_canvas_links_to_local(html_content, page_identifier_to_filename):
         html_content
     )
     
+    # Convert assignment links: $CANVAS_OBJECT_REFERENCE$/assignments/id → [ASSIGNMENT:id]
+    # Leave as placeholder since we can't determine local assignment filename
+    html_content = re.sub(
+        r'\$CANVAS_OBJECT_REFERENCE\$/assignments/([^"\'?>\s]+)',
+        r'[ASSIGNMENT:\1]',
+        html_content
+    )
+    
     # Remove module links (can't be represented locally)
     # Replace with a comment so user knows what was there
     html_content = re.sub(
-        r'\$CANVAS_OBJECT_REFERENCE\$/modules/([^"\'>\s]+)',
+        r'\$CANVAS_OBJECT_REFERENCE\$/modules/([^"\'?>\s]+)',
         r'[MODULE:\1]',
         html_content
     )
@@ -434,11 +443,22 @@ Local links work for preview and are automatically converted when building:
 ```html
 <a href="../web_resources/syllabus.pdf">Syllabus</a>
 ```
+Converts to: `$IMS-CC-FILEBASE$/web_resources/syllabus.pdf`
 
 **Pages:**
 ```html
 <a href="page-name.html">Go to Page</a>
 ```
+Converts to: `$CANVAS_OBJECT_REFERENCE$/pages/page-name`
+
+**Assignments:**
+```html
+<a href="$CANVAS_OBJECT_REFERENCE$/assignments/assignment-id">Assignment Name</a>
+```
+Note: Use the assignment JSON filename (without .json) as the assignment-id.
+Example: `week-01-ascii-art-assignment.json` → `week-01-ascii-art-assignment`
+
+The assignment link format is already in Canvas format and will be preserved during build.
 
 ## Page Metadata
 
