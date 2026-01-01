@@ -761,7 +761,7 @@ def build_imscc(template_dir, output_file=None):
     # Process pages
     print(f"\n📄 Processing pages from {wiki_dir.name}/...")
     
-    html_files = sorted(wiki_dir.glob("*.html"))
+    html_files = sorted(wiki_dir.glob("**/*.html")) + sorted(wiki_dir.glob("**/*.cs"))
     if not html_files:
         print(f"   ⚠️  No HTML files found in {wiki_dir}")
     
@@ -808,6 +808,11 @@ def build_imscc(template_dir, output_file=None):
         )
         
         # Extract body content if full HTML document
+        head_match = re.search(r'<head[^>]*>(.*?)</head>', converted_html, re.DOTALL | re.IGNORECASE)
+        if head_match:
+            previous_head = head_match.group(1).strip()
+        else:
+            previous_head = ""
         body_match = re.search(r'<body[^>]*>(.*?)</body>', converted_html, re.DOTALL | re.IGNORECASE)
         if body_match:
             converted_html = body_match.group(1).strip()
@@ -819,7 +824,8 @@ def build_imscc(template_dir, output_file=None):
         page = course.add_page(
             title=page_title,
             content=converted_html,
-            is_front_page=is_home
+            is_front_page=is_home,
+            previous_head=previous_head
         )
         
         pages_map[title_slug] = page

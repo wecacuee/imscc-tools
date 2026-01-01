@@ -14,7 +14,8 @@ class WikiPage:
         identifier: Optional[str] = None,
         workflow_state: str = "active",
         editing_roles: str = "teachers",
-        is_front_page: bool = False
+        is_front_page: bool = False,
+        previous_head: str = ""
     ):
         """
         Create a new wiki page.
@@ -34,6 +35,7 @@ class WikiPage:
         self.editing_roles = editing_roles
         self.is_front_page = is_front_page
         self._filename = f"{sanitize_filename(title)}.html"
+        self.previous_head = previous_head
     
     @property
     def filename(self) -> str:
@@ -47,6 +49,7 @@ class WikiPage:
         Returns:
             Complete HTML content with metadata
         """
+        previous_head = self.previous_head
         front_page_meta = '<meta name="front_page" content="true"/>\n' if self.is_front_page else ''
         return f"""<html>
 <head>
@@ -55,7 +58,9 @@ class WikiPage:
 <meta name="identifier" content="{self.identifier}"/>
 <meta name="editing_roles" content="{self.editing_roles}"/>
 <meta name="workflow_state" content="{self.workflow_state}"/>
-{front_page_meta}</head>
+{front_page_meta}
+{previous_head}
+</head>
 <body>
 {self.content}
 </body>
